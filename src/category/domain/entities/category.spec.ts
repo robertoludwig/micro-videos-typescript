@@ -1,6 +1,27 @@
+import { CategoryProperties } from "./category";
 import {Category} from "./category";
+import {validate as uuidValidate} from "uuid";
 
 describe("Category Unit Tests", () => {
+
+    test("id field", () => {
+
+        type CategoryData = { props: CategoryProperties; id?: string };
+
+        const data: CategoryData[] = [
+            { props: { name: 'Movie' }  },
+            { props: { name: 'Movie' }, id: null  },
+            { props: { name: 'Movie' }, id: undefined },
+            { props: { name: 'Movie' }, id: 'fa12c88b-02f5-435f-9a04-ab808cb81fe5' },
+        ];
+
+        data.forEach((item) => {
+            const category = new Category(item.props, item.id);
+            expect(category.id).not.toBeNull();
+            expect(uuidValidate(category.id)).toBeTruthy();
+        });
+
+    });
 
     test("constructor of category", () => {
         // Arrange
@@ -36,7 +57,6 @@ describe("Category Unit Tests", () => {
         expect(category.description).toBeNull();
         category['description'] = null;
         expect(category.description).toBeNull();
-
     });
 
     test("getter and setter of is_active prop", () => {
@@ -70,7 +90,6 @@ describe("Category Unit Tests", () => {
             created_at: created_at
         });
         expect(category.created_at).toBe(created_at);
-
     });
 
 });
